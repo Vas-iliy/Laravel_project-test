@@ -12,7 +12,7 @@ class UserController extends Controller
 {
     public function register()
     {
-        return view('user.register');
+        return view('auth.register');
     }
 
     public function store(RegisterUser $request)
@@ -22,14 +22,13 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
-        session()->flash('success', 'Регистрация пройдена');
-        Auth::login($user);
-        return redirect()->home()->with('success', 'Регистрация пройдена');
+
+        return redirect()->route('verification.notice');
     }
 
     public function loginForm()
     {
-        return view('user.login');
+        return view('auth.login');
     }
 
     public function login(LoginUser $request)
@@ -39,9 +38,9 @@ class UserController extends Controller
             'password' => $request->password
         ])) {
             session()->flash('success', 'You are logged');
-            if (Auth::user()->is_admin) {
+            /*if (Auth::user()->is_admin) {
                 return redirect()->route('admin.index');
-            }
+            }*/
             return redirect()->home();
         }
         return redirect()->back()->with('error', 'Incorrect login or password');

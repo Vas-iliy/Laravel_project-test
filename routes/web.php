@@ -18,6 +18,15 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+//Auth
+Route::group(['middleware' => 'guest'], function () {
+    Route::get('/register', 'UserController@register')->name('register.create');
+    Route::post('/register', 'UserController@store')->name('register.store');
+    Route::get('/login', 'UserController@loginForm')->name('login.create');
+    Route::post('/login', 'UserController@login')->name('login');
+});
+Route::get('/logout', 'UserController@logout')->name('logout')->middleware('auth');
+
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');
